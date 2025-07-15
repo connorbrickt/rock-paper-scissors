@@ -11,46 +11,36 @@ function getComputerChoice() {
     return output;
 }
 
-function getHumanChoice() {
-    const input = prompt("Rock, Paper, Scissors, SHOOT! (enter your chosen hand here):");
-    const revisedInput = input.toLowerCase().trim();
-    if (revisedInput === "rock" || revisedInput === "paper" || revisedInput === "scissors") {
-        return revisedInput;
+let humanScore = 0;
+let computerScore = 0;
+
+const results = document.querySelector(".results");
+
+function winnerText(winner) {
+    if (humanScore === 5 || computerScore === 5) {
+        results.textContent = `${winner} won the game! The final score is Human: ${humanScore} and Computer: ${computerScore}`;
+        humanScore = 0;
+        computerScore = 0;
     } else {
-        return "invalid input";
+        results.textContent = `${winner} won this round! The current score is Human: ${humanScore} and Computer: ${computerScore}`;
     }
 }
 
-function playGame() {
-    let humanScore = 0;
-    let computerScore = 0;
-
-    function winnerText(winner) {
-        console.log(`${winner} won! The current score is Human: ${humanScore} and Computer: ${computerScore}`);
-    }
-
-    function playRound(humanChoice, computerChoice) {
-        if (humanChoice === "invalid input") {
-            computerScore++;
-            winnerText("Computer");
-        } else if (humanChoice === computerChoice) {
-            winnerText("No one");
-        } else if ((computerChoice === "rock" && humanChoice === "paper") || 
-        (computerChoice === "paper" && humanChoice ==="scissors") || 
+function playRound(humanChoice, computerChoice) {
+    if (humanChoice === computerChoice) {
+        winnerText("No one");
+    } else if ((computerChoice === "rock" && humanChoice === "paper") ||
+        (computerChoice === "paper" && humanChoice === "scissors") ||
         (computerChoice === "scissors" && humanChoice === "rock")) {
-            computerScore++;
-            winnerText("Computer");
-        } else {
-            humanScore++;
-            winnerText("Human");
-        }
+        computerScore++;
+        winnerText("Computer");
+    } else {
+        humanScore++;
+        winnerText("Human");
     }
-
-    playRound(getHumanChoice(), getComputerChoice());
-    playRound(getHumanChoice(), getComputerChoice());
-    playRound(getHumanChoice(), getComputerChoice());
-    playRound(getHumanChoice(), getComputerChoice());
-    playRound(getHumanChoice(), getComputerChoice());
 }
 
-playGame();
+const options = document.querySelector(".options");
+
+options.addEventListener("click",
+    e => playRound(e.target.textContent.toLowerCase(), getComputerChoice()));
